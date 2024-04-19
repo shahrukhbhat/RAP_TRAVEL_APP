@@ -1,9 +1,9 @@
 @Metadata.layer: #CORE
 @UI: {
-  headerInfo: { typeName: 'Travel',
-                typeNamePlural: 'Travels',
+  headerInfo: { typeName: 'TravelCustom',
+                typeNamePlural: 'Travelsss',
                 title: { type: #STANDARD, label: 'Travel', value: 'TravelID' } },
-  presentationVariant: [{ sortOrder: [{ by: 'TravelID', direction:  #DESC }] }] }
+  presentationVariant: [{ sortOrder: [{ by: 'TravelID', direction:  #ASC }] }] }
 
 annotate view ZC_RAP_Travel_786 with
 {

@@ -10,7 +10,8 @@
        @Search.defaultSearchElement: true
        TravelID,
 //       @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Agency', element: 'AgencyID'} }]
-@Consumption.valueHelpDefinition: [{ entity: { name: 'ZCE_RAP_AGENCY_786', element: 'AgencyID'} }]
+@Consumption.valueHelpDefinition: [{ entity: { name: 'ZRAP_CE_AGENCIES', element: 'agency_id'} }]
+//@Consumption.valueHelpDefinition: [{ entity: { name: 'ZCE_RAP_AGENCY_786', element: 'AgencyId'} }]
 //       @ObjectModel.text.element: ['AgencyName']
        @Search.defaultSearchElement: true
        AgencyID,

@@ -8,6 +8,7 @@
     <MASTERLANG>E</MASTERLANG>
     <LANGUAGE>E</LANGUAGE>
     <SHORT_TEXT>Access Control for ZI_RAP_Travel_786</SHORT_TEXT>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
    </DCLS>
   </asx:values>
  </asx:abap>

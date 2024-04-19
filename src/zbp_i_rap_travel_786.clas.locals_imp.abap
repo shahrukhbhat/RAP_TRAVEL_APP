@@ -43,10 +43,7 @@ CLASS lhc_Travel DEFINITION INHERITING FROM cl_abap_behavior_handler.
                                         overall_status        TYPE /dmo/overall_status
                               RETURNING VALUE(update_granted) TYPE abap_bool.
 
-    "!
-    "! @parameter has_before_image |
-    "! @parameter overall_status |
-    "! @parameter delete_granted |
+
     METHODS is_delete_granted IMPORTING has_before_image      TYPE abap_bool
                                         overall_status        TYPE /dmo/overall_status
                               RETURNING VALUE(delete_granted) TYPE abap_bool.
@@ -287,23 +284,31 @@ CLASS lhc_Travel IMPLEMENTATION.
 
     DATA filter_conditions  TYPE if_rap_query_filter=>tt_name_range_pairs .
     DATA ranges_table TYPE if_rap_query_filter=>tt_range_option .
-    DATA business_data TYPE TABLE OF zrap_786z_travel_agency_es5.
+    "DATA business_data TYPE TABLE OF zrap_786z_travel_agency_es5.
+    DATA business_data TYPE zbp_agency_eup=>tyt_agency_type."zrap_ce_agencies.
 
     IF  agencies IS NOT INITIAL.
 
       ranges_table = VALUE #( FOR agency IN agencies (  sign = 'I' option = 'EQ' low = agency-agency_id ) ).
-      filter_conditions = VALUE #( ( name = 'AGENCYID'  range = ranges_table ) ).
+      "filter_conditions = VALUE #( ( name = 'AGENCYID'  range = ranges_table ) ).
+      filter_conditions = VALUE #( ( name = 'AGENCY_ID'  range = ranges_table ) ).
 
       TRY.
           "skip and top must not be used
           "but an appropriate filter will be provided
-          NEW zcl_ce_rap_agency_786( )->get_agencies(
+*          NEW zcl_ce_rap_agency_786( )->get_agencies(
+*            EXPORTING
+*              filter_cond    = filter_conditions
+*              is_data_requested  = abap_true
+*              is_count_requested = abap_false
+*            IMPORTING
+*              business_data  = business_data
+*            ) .
+                NEW zcl_ce_agency( )->get_agencies(
             EXPORTING
-              filter_cond    = filter_conditions
-              is_data_requested  = abap_true
-              is_count_requested = abap_false
+              it_filter_cond    = filter_conditions
             IMPORTING
-              business_data  = business_data
+              et_business_data  = business_data
             ) .
 
         CATCH /iwbep/cx_cp_remote
@@ -343,8 +348,8 @@ CLASS lhc_Travel IMPLEMENTATION.
 
 
 
-**      IF travel-AgencyID IS INITIAL OR NOT line_exists( agencies_db[ agency_id = travel-AgencyID ] ).
-      IF travel-AgencyID IS INITIAL OR NOT line_exists( business_data[ agencyid = travel-AgencyID ] ).
+*      IF travel-AgencyID IS INITIAL OR NOT line_exists( agencies_db[ agency_id = travel-AgencyID ] ).
+      IF travel-AgencyID IS INITIAL OR NOT line_exists( business_data[ agency_id = travel-AgencyID ] ).
 
         APPEND VALUE #( %tky = travel-%tky ) TO failed-travel.
 
@@ -546,7 +551,7 @@ CLASS lhc_Travel IMPLEMENTATION.
     delete_granted = COND #( WHEN sy-subrc = 0 THEN abap_true ELSE abap_false ).
 
     " Simulate full access - for testing purposes only! Needs to be removed for a productive implementation.
-    delete_granted = abap_true.
+*    delete_granted = abap_true.
   ENDMETHOD.
 
   METHOD is_create_granted.
@@ -555,7 +560,7 @@ CLASS lhc_Travel IMPLEMENTATION.
       ID 'ACTVT' FIELD '01'.
     create_granted = COND #( WHEN sy-subrc = 0 THEN abap_true ELSE abap_false ).
     " Simulate full access - for testing purposes only! Needs to be removed for a productive implementation.
-    create_granted = abap_true.
+*    create_granted = abap_true.
   ENDMETHOD.
 
   METHOD is_update_granted.
@@ -571,7 +576,7 @@ CLASS lhc_Travel IMPLEMENTATION.
     update_granted = COND #( WHEN sy-subrc = 0 THEN abap_true ELSE abap_false ).
 
     " Simulate full access - for testing purposes only! Needs to be removed for a productive implementation.
-    update_granted = abap_true.
+*    update_granted = abap_true.
   ENDMETHOD.
 
 ENDCLASS.
